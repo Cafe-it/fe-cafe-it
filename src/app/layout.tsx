@@ -11,7 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.variable} antialiased bg-gray-100`}>
+      <body className={`${pretendard.variable} antialiased bg-amber-800`}>
         <div className="max-w-md mx-auto min-h-screen bg-white shadow-sm">
           {children}
         </div>

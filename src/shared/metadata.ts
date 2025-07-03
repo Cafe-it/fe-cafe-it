@@ -19,5 +19,5 @@ export const META = {
   url: "https://cafeit.com",
   googleVerification: "CgyfsknTnwmw-3MVu_AGzdeVCqRY3d2VTrQWaCumLfQ",
   naverVerification: "6e541c9717d6614e8ee55b0d67f4eb82bcdfd16c",
-  ogImage: "../assets/images/event/popup.png",
+  ogImage: "/favicon.ico",
 } as const;
