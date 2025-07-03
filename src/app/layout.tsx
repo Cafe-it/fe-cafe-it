@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import { pretendard } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Cafe-it",
@@ -13,8 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+    <html lang="ko">
+      <body className={`${pretendard.variable} font-pretendard antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }
