@@ -1,12 +1,8 @@
-import type { Metadata } from "next";
-
 import "./globals.css";
 import { pretendard } from "./fonts";
+import { getMetadata } from "@/shared/getMetadata";
 
-export const metadata: Metadata = {
-  title: "Cafe-it",
-  description: "Check real-time cafe seat availability",
-};
+export const metadata = getMetadata();
 
 export default function RootLayout({
   children,
