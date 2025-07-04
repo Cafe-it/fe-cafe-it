@@ -1,6 +1,6 @@
 "use client";
 
-import MobileBar from "../../components/MobileBar";
+import MobileBar from "../../features/ui/MobileBar";
 
 export default function FavoritesPage() {
   return (

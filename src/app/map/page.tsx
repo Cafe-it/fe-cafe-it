@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import MobileBar from "../../components/MobileBar";
-import NaverMap from "../../components/NaverMap";
-import CafeMarker from "../../components/CafeMarker";
+import MobileBar from "@/features/ui/MobileBar";
+import NaverMap from "@/features/ui/NaverMap";
+import CafeMarker from "@/features/ui/CafeMarker";
 
 // 샘플 카페 데이터
 const sampleCafes = [
