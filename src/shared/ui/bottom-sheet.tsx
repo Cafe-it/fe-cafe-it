@@ -33,7 +33,7 @@ export function BottomSheet({
             </Dialog.Overlay>
             <Dialog.Content asChild>
               <motion.div
-                className="fixed left-0 right-0 bottom-0 z-50 bg-white rounded-t-[20px] shadow-lg"
+                className="fixed left-0 right-0 bottom-0 z-100 bg-white rounded-t-[20px] shadow-lg"
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}

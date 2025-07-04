@@ -31,10 +31,6 @@ export default function NaverMap({
       const mapOptions = {
         center: new window.naver.maps.LatLng(center.lat, center.lng),
         zoom: zoom,
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-          style: window.naver.maps.MapTypeControlStyle.DROPDOWN,
-        },
         zoomControl: true,
         zoomControlOptions: {
           style: window.naver.maps.ZoomControlStyle.SMALL,
