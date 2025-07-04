@@ -54,7 +54,6 @@ export default function CafeMarker({
       },
     });
 
-    // 마커 클릭 이벤트
     window.naver.maps.Event.addListener(marker, "click", () => {
       setIsSheetOpen(true);
     });
