@@ -45,14 +45,18 @@ export function BottomSheet({
                   damping: 30,
                 }}
               >
+                <Dialog.Title className="sr-only">
+                  {title || "카페 정보"}
+                </Dialog.Title>
+
                 <div className="flex items-center justify-center p-4 border-b border-gray-100">
                   <div className="w-12 h-1 bg-gray-300 rounded-full" />
                 </div>
                 {title && (
                   <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-                    <Dialog.Title className="text-lg font-semibold text-gray-900">
+                    <h2 className="text-lg font-semibold text-gray-900">
                       {title}
-                    </Dialog.Title>
+                    </h2>
                     <Dialog.Close className="p-1 hover:bg-gray-100 rounded-full transition-colors">
                       <X className="w-5 h-5 text-gray-500" />
                     </Dialog.Close>
