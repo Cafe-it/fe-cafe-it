@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import MobileBar from "@/features/ui/MobileBar";
-import NaverMap from "@/features/ui/NaverMap";
-import CafeMarker from "@/features/ui/CafeMarker";
+import GoogleMapComponent from "@/features/ui/GoogleMap";
 import { CafeInfoSheet } from "@/features/ui/CafeInfoSheet";
 
 // 샘플 카페 데이터
@@ -131,15 +130,10 @@ const sampleCafes = [
 ];
 
 export default function MapPage() {
-  const [mapInstance, setMapInstance] = useState<any>(null);
   const [selectedCafe, setSelectedCafe] = useState<
     (typeof sampleCafes)[0] | null
   >(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-
-  const handleMapLoad = (map: any) => {
-    setMapInstance(map);
-  };
 
   const handleCafeClick = (cafe: (typeof sampleCafes)[0]) => {
     setSelectedCafe(cafe);
@@ -150,29 +144,7 @@ export default function MapPage() {
     <main className="relative flex flex-col h-screen pb-16">
       {/* 지도 섹션 */}
       <div className="flex-1 relative">
-        <NaverMap
-          center={{ lat: 37.5665, lng: 126.978 }}
-          zoom={12}
-          className="w-full h-full"
-          onMapLoad={handleMapLoad}
-        />
-
-        {/* 카페 마커들 */}
-        {mapInstance &&
-          sampleCafes.map((cafe) => (
-            <CafeMarker
-              key={cafe.id}
-              map={mapInstance}
-              position={cafe.position}
-              cafeInfo={{
-                id: cafe.id,
-                name: cafe.name,
-                address: cafe.address,
-                availableSeats: cafe.availableSeats,
-                totalSeats: cafe.totalSeats,
-              }}
-            />
-          ))}
+        <GoogleMapComponent cafes={sampleCafes} />
       </div>
 
       {/* 하단 카페 리스트 */}
