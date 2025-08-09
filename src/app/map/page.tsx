@@ -8,7 +8,9 @@ import CafeList from "./(components)/CafeList";
 import { Label } from "@/shared/ui/label";
 import { Slider } from "@/shared/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import Image from "next/image";
 import { throttle } from "lodash";
+import { motion } from "framer-motion";
 
 export default function MapPage() {
   const [currentLocation, setCurrentLocation] = useState<{
@@ -111,8 +113,13 @@ export default function MapPage() {
       <div className="absolute bottom-16 left-0 right-0 bg-white p-4 rounded-t-lg shadow-lg">
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
-            <Label htmlFor="radius-slider">반경 설정</Label>
-            <span>{displayRadius}</span>
+            <Label
+              htmlFor="radius-slider"
+              className="text-sm font-medium text-muted-foreground"
+            >
+              반경 설정
+            </Label>
+            <span className="font-semibold text-lg">{displayRadius}</span>
           </div>
           <Slider
             id="radius-slider"
@@ -128,19 +135,44 @@ export default function MapPage() {
             <TabsTrigger value="nearby-cafes">주변 카페</TabsTrigger>
             <TabsTrigger value="seat-status">실시간 자리 현황</TabsTrigger>
           </TabsList>
-          <TabsContent value="nearby-cafes">
+          <TabsContent
+            value="nearby-cafes"
+            className="min-h-[30vh] overflow-y-auto"
+          >
             {isLoading ? (
-              <div>주변 카페 정보를 불러오는 중입니다...</div>
+              <div className="flex items-center justify-center h-full">
+                주변 카페 정보를 불러오는 중입니다...
+              </div>
             ) : isError ? (
-              <div>에러가 발생했습니다: {error.message}</div>
+              <div className="flex items-center justify-center h-full">
+                에러가 발생했습니다: {error.message}
+              </div>
             ) : (
               <CafeList cafes={mapCafes} />
             )}
           </TabsContent>
-          <TabsContent value="seat-status">
-            <div className="py-4 text-center">
-              실시간 자리 현황 기능은 준비 중입니다.
-            </div>
+          <TabsContent
+            value="seat-status"
+            className="flex min-h-[30vh] flex-col items-center justify-center"
+          >
+            <motion.div
+              className="flex h-full flex-col"
+              animate={{ y: ["-10px", "10px"] }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+              }}
+            >
+              <Image
+                src="/icon/pin.svg"
+                alt="로고_둥둥_이미지"
+                width={100}
+                height={100}
+              />
+            </motion.div>
+            <p className="text-sm text-muted-foreground">준비 중입니다.</p>
           </TabsContent>
         </Tabs>
       </div>
