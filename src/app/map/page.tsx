@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import Image from "next/image";
 import { throttle } from "lodash";
 import { motion } from "framer-motion";
+import LoadingDots from "./(components)/LoadingDot";
 
 export default function MapPage() {
   const [currentLocation, setCurrentLocation] = useState<{
@@ -82,7 +83,7 @@ export default function MapPage() {
     () =>
       throttle((value) => {
         setRadius(value);
-      }, 300),
+      }, 500),
     []
   );
 
@@ -140,9 +141,7 @@ export default function MapPage() {
             className="min-h-[30vh] overflow-y-auto"
           >
             {isLoading ? (
-              <div className="flex items-center justify-center h-full">
-                주변 카페 정보를 불러오는 중입니다...
-              </div>
+              <LoadingDots />
             ) : isError ? (
               <div className="flex items-center justify-center h-full">
                 에러가 발생했습니다: {error.message}
