@@ -1,6 +1,6 @@
 "use client";
 
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Circle } from "@react-google-maps/api";
 import { useMemo } from "react";
 import CafeMarker from "./CafeMarker";
 
@@ -21,9 +21,14 @@ interface GoogleMapProps {
     lat: number;
     lng: number;
   };
+  radius?: number;
 }
 
-const GoogleMapComponent = ({ cafes, initialCenter }: GoogleMapProps) => {
+const GoogleMapComponent = ({
+  cafes,
+  initialCenter,
+  radius,
+}: GoogleMapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
@@ -33,6 +38,22 @@ const GoogleMapComponent = ({ cafes, initialCenter }: GoogleMapProps) => {
     () => ({
       width: "100%",
       height: "100%",
+    }),
+    []
+  );
+
+  const circleOptions = useMemo(
+    () => ({
+      strokeColor: "#4A90E2",
+      strokeOpacity: 0.2,
+      strokeWeight: 2,
+      fillColor: "#4A90E2",
+      fillOpacity: 0.2,
+      clickable: false,
+      draggable: false,
+      editable: false,
+      visible: true,
+      zIndex: 1,
     }),
     []
   );
@@ -52,9 +73,19 @@ const GoogleMapComponent = ({ cafes, initialCenter }: GoogleMapProps) => {
       zoom={15}
       options={{ disableDefaultUI: true }}
     >
-      {cafes.map((cafe) => (
-        <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
-      ))}
+      {cafes.map((cafe) => {
+        console.log(cafe);
+        return (
+          <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
+        );
+      })}
+      {radius && (
+        <Circle
+          center={initialCenter}
+          radius={radius}
+          options={circleOptions}
+        />
+      )}
     </GoogleMap>
   );
 };
