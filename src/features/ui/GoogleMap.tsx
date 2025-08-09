@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  GoogleMap,
-  useJsApiLoader,
-  Marker,
-  InfoWindow,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useMemo, useState, useEffect } from "react";
+import CafeMarker from "./CafeMarker";
 
 interface Cafe {
   id: string;
@@ -31,7 +27,6 @@ const GoogleMapComponent = ({ cafes }: GoogleMapProps) => {
   });
 
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
   const [locationError, setLocationError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -117,29 +112,11 @@ const GoogleMapComponent = ({ cafes }: GoogleMapProps) => {
         }
       }
       zoom={15}
+      options={{ disableDefaultUI: true }} // 기본 UI(줌 컨트롤, 스트리트뷰 등) 비활성화
     >
       {cafes.map((cafe) => (
-        <Marker
-          key={cafe.id}
-          position={cafe.position}
-          onClick={() => setSelectedCafe(cafe)}
-        />
+        <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
       ))}
-
-      {selectedCafe && (
-        <InfoWindow
-          position={selectedCafe.position}
-          onCloseClick={() => setSelectedCafe(null)}
-        >
-          <div>
-            <h3>{selectedCafe.name}</h3>
-            <p>{selectedCafe.address}</p>
-            <p>
-              {selectedCafe.availableSeats} / {selectedCafe.totalSeats}
-            </p>
-          </div>
-        </InfoWindow>
-      )}
     </GoogleMap>
   );
 };
