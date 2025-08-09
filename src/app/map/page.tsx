@@ -133,7 +133,7 @@ export default function MapPage() {
         </div>
         <Tabs defaultValue="nearby-cafes" className="mt-4">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="nearby-cafes">주변 카페</TabsTrigger>
+            <TabsTrigger value="nearby-cafes">점주 수동 자리 현황</TabsTrigger>
             <TabsTrigger value="seat-status">실시간 자리 현황</TabsTrigger>
           </TabsList>
           <TabsContent
