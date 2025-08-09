@@ -1,13 +1,12 @@
 "use client";
 
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import CafeMarker from "./CafeMarker";
 
 interface Cafe {
   id: string;
   name: string;
-  address: string;
   position: {
     lat: number;
     lng: number;
@@ -18,38 +17,17 @@ interface Cafe {
 
 interface GoogleMapProps {
   cafes: Cafe[];
+  initialCenter: {
+    lat: number;
+    lng: number;
+  };
 }
 
-const GoogleMapComponent = ({ cafes }: GoogleMapProps) => {
+const GoogleMapComponent = ({ cafes, initialCenter }: GoogleMapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
-
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCurrentLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          setLocationError(
-            "위치 정보 접근이 거부되었습니다. 브라우저 설정을 확인해주세요."
-          );
-          console.error("Error getting current location: ", error);
-        }
-      );
-    } else {
-      setLocationError("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
-      console.error("Geolocation is not supported by this browser.");
-    }
-  }, []);
 
   const containerStyle = useMemo(
     () => ({
@@ -58,41 +36,6 @@ const GoogleMapComponent = ({ cafes }: GoogleMapProps) => {
     }),
     []
   );
-
-  if (locationError) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 text-gray-800">
-        <div className="text-center p-8 bg-white rounded-lg shadow-md max-w-sm mx-auto">
-          <svg
-            className="mx-auto h-12 w-12 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <h2 className="mt-4 text-xl font-semibold">
-            위치 권한을 허용해주세요
-          </h2>
-          <p className="mt-2 text-gray-600">
-            주변 카페 정보를 표시하려면 위치 정보 접근 권한이 필요합니다.
-          </p>
-          <p className="mt-4 text-sm text-gray-500">
-            브라우저 주소창의 자물쇠(🔒) 아이콘을 클릭하여
-            <br />
-            <strong>위치</strong> 권한을 <strong>'허용'</strong>으로 변경한 후
-            페이지를 새로고침 해주세요.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   if (!isLoaded) {
     return (
@@ -105,14 +48,9 @@ const GoogleMapComponent = ({ cafes }: GoogleMapProps) => {
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={
-        currentLocation || {
-          lat: 37.5665,
-          lng: 126.978,
-        }
-      }
+      center={initialCenter}
       zoom={15}
-      options={{ disableDefaultUI: true }} // 기본 UI(줌 컨트롤, 스트리트뷰 등) 비활성화
+      options={{ disableDefaultUI: true }}
     >
       {cafes.map((cafe) => (
         <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
