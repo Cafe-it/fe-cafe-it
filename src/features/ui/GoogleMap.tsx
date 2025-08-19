@@ -1,7 +1,7 @@
 "use client";
 
-import { GoogleMap, useJsApiLoader, Circle } from "@react-google-maps/api";
-import { useMemo } from "react";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { useMemo, useState, useCallback } from "react";
 import CafeMarker from "./CafeMarker";
 
 export interface Cafe {
@@ -16,24 +16,33 @@ export interface Cafe {
   isManualMonitoring?: boolean;
 }
 
+export interface Bounds {
+  swLat: number;
+  swLng: number;
+  neLat: number;
+  neLng: number;
+}
+
 interface GoogleMapProps {
   cafes: Cafe[];
   initialCenter: {
     lat: number;
     lng: number;
   };
-  radius?: number;
+  onBoundsChange: (bounds: Bounds) => void;
 }
 
 const GoogleMapComponent = ({
   cafes,
   initialCenter,
-  radius,
+  onBoundsChange,
 }: GoogleMapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
   });
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
   const containerStyle = useMemo(
     () => ({
@@ -43,21 +52,29 @@ const GoogleMapComponent = ({
     []
   );
 
-  const circleOptions = useMemo(
-    () => ({
-      strokeColor: "#4A90E2",
-      strokeOpacity: 0.2,
-      strokeWeight: 2,
-      fillColor: "#4A90E2",
-      fillOpacity: 0.2,
-      clickable: false,
-      draggable: false,
-      editable: false,
-      visible: true,
-      zIndex: 1,
-    }),
-    []
-  );
+  const onLoad = useCallback(function callback(map: google.maps.Map) {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback() {
+    setMap(null);
+  }, []);
+
+  const onIdle = () => {
+    if (map) {
+      const bounds = map.getBounds();
+      if (bounds) {
+        const ne = bounds.getNorthEast();
+        const sw = bounds.getSouthWest();
+        onBoundsChange({
+          neLat: ne.lat(),
+          neLng: ne.lng(),
+          swLat: sw.lat(),
+          swLng: sw.lng(),
+        });
+      }
+    }
+  };
 
   if (!isLoaded) {
     return (
@@ -73,20 +90,13 @@ const GoogleMapComponent = ({
       center={initialCenter}
       zoom={15}
       options={{ disableDefaultUI: true }}
+      onLoad={onLoad}
+      onUnmount={onUnmount}
+      onIdle={onIdle}
     >
-      {cafes.map((cafe) => {
-        console.log(cafe);
-        return (
-          <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
-        );
-      })}
-      {radius && (
-        <Circle
-          center={initialCenter}
-          radius={radius}
-          options={circleOptions}
-        />
-      )}
+      {cafes.map((cafe) => (
+        <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
+      ))}
     </GoogleMap>
   );
 };
