@@ -144,69 +144,35 @@ export default function MapPage() {
         />
       </div>
 
-      <div className="absolute bottom-16 left-0 right-0 bg-white p-4 rounded-t-lg shadow-lg">
-        <Tabs defaultValue="nearby-cafes" className="mt-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="nearby-cafes">점주 수동 자리 현황</TabsTrigger>
-            <TabsTrigger value="seat-status">실시간 자리 현황</TabsTrigger>
-          </TabsList>
-          <TabsContent
-            value="nearby-cafes"
-            className="min-h-[30vh] overflow-y-auto"
-          >
-            {isLoading ? (
-              <LoadingDots />
-            ) : isError ? (
-              <div className="flex flex-col items-center justify-center h-full space-y-4 p-8">
-                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
-                  <AlertCircle className="w-8 h-8 text-red-500" />
-                </div>
-                <div className="text-center space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-900">
-                    데이터를 불러올 수 없습니다
-                  </h3>
-                  <p className="text-sm text-gray-500 max-w-xs">
-                    잠시 후 다시 시도해주세요
-                  </p>
-                </div>
-                <Button
-                  onClick={() => window.location.reload()}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center space-x-2"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  <span>다시 시도</span>
-                </Button>
-              </div>
-            ) : (
-              <CafeList cafes={mapCafes} />
-            )}
-          </TabsContent>
-          <TabsContent
-            value="seat-status"
-            className="flex min-h-[30vh] flex-col items-center justify-center"
-          >
-            <motion.div
-              className="flex h-full flex-col"
-              animate={{ y: ["-5px", "5px"] }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-              }}
+      <div className="min-h-[30vh] overflow-y-auto p-4">
+        {isLoading ? (
+          <LoadingDots />
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center h-full space-y-4 p-8">
+            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-red-500" />
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-semibold text-gray-900">
+                데이터를 불러올 수 없습니다
+              </h3>
+              <p className="text-sm text-gray-500 max-w-xs">
+                잠시 후 다시 시도해주세요
+              </p>
+            </div>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2"
             >
-              <Image
-                src="/icon/pin.svg"
-                alt="로고_둥둥_이미지"
-                width={100}
-                height={100}
-              />
-            </motion.div>
-            <p className="text-sm text-muted-foreground">준비 중입니다.</p>
-          </TabsContent>
-        </Tabs>
+              <RefreshCw className="w-4 h-4" />
+              <span>다시 시도</span>
+            </Button>
+          </div>
+        ) : (
+          <CafeList cafes={mapCafes} />
+        )}
       </div>
 
       <MobileBar />

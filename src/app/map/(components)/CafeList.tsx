@@ -18,7 +18,7 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
   };
 
   return (
-    <div className="bg-white border-t border-gray-200 max-h-64 overflow-y-auto pt-4">
+    <div className="bg-white border-t border-gray-200 max-h-[30vh] overflow-y-auto pt-4">
       <div className="space-y-4">
         {cafes.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
