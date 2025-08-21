@@ -1,9 +1,12 @@
 "use client";
 
 import { BottomSheet } from "@/shared/ui/bottom-sheet";
-import { MapPin, Users, Clock } from "lucide-react";
+import { MapPin, Users, Clock, Heart } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { motion, Variants } from "framer-motion";
+import { useState, useEffect } from "react";
+import { addFavorite, removeFavorite, isFavorite } from "@/lib/favorites";
+import { CafeResponse } from "@/app/apis/map/useGetCafesQuery";
 
 interface CafeInfo {
   id: string;
@@ -25,6 +28,21 @@ export function CafeInfoSheet({
   cafeInfo,
 }: CafeInfoSheetProps) {
   const isAvailable = cafeInfo.availableSeats > 0;
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    setIsFav(isFavorite(cafeInfo.id));
+  }, [cafeInfo]);
+
+  const handleFavoriteClick = () => {
+    if (isFav) {
+      removeFavorite(cafeInfo.id);
+      setIsFav(false);
+    } else {
+      addFavorite(cafeInfo as CafeResponse);
+      setIsFav(true);
+    }
+  };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -147,11 +165,15 @@ export function CafeInfoSheet({
             Get directions
           </motion.button>
           <motion.button
-            className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+            onClick={handleFavoriteClick}
+            className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center justify-center"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Add to favorites
+            <Heart
+              className={cn("w-5 h-5 mr-2", isFav && "fill-red-500 text-red-500")}
+            />
+            {isFav ? "Remove from favorites" : "Add to favorites"}
           </motion.button>
         </motion.div>
       </motion.div>

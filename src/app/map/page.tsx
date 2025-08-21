@@ -10,6 +10,7 @@ import { throttle } from "lodash";
 import LoadingDots from "./(components)/LoadingDot";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/shared/ui/button";
+import { ErrorResponse } from "../apis/common.dto";
 
 // Haversine formula to calculate distance between two points
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -100,7 +101,7 @@ export default function MapPage() {
   useEffect(() => {
     if (isError && error) {
       // A more specific error check would be better if the API provides a specific error code
-      if ((error as any).message?.includes("Radius is too large")) {
+      if ((error as ErrorResponse).message?.includes("Radius is too large")) {
         setIsRadiusError(true);
       } else {
         setIsRadiusError(false);
