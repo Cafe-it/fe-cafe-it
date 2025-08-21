@@ -18,7 +18,7 @@ export default function MobileBar() {
   const navItems: NavItem[] = [
     {
       id: "map",
-      label: "지도",
+      label: "Map",
       path: "/map",
       icon: (
         <svg
@@ -44,7 +44,7 @@ export default function MobileBar() {
 
     {
       id: "setting",
-      label: "설정",
+      label: "Settings",
       path: "/settings",
       icon: <Settings className="w-6 h-6" />,
       activeIcon: <Settings className="w-6 h-6" />,

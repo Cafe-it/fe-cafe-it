@@ -49,7 +49,7 @@ export function CafeListItem({ cafe, onClick }: CafeListItemProps) {
                 : "bg-red-100 text-red-800"
             )}
           >
-            {isAvailable ? "자리 있음" : "자리 없음"}
+            {isAvailable ? "Seats available" : "No seats"}
           </div>
           <div className="flex items-center text-gray-600 text-sm">
             <Users className="w-4 h-4 mr-1" />

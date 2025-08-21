@@ -10,10 +10,10 @@ const EmptyCafeSection = () => {
       </div>
       <div className="text-center space-y-2">
         <h3 className="text-lg font-semibold text-gray-900">
-          데이터를 불러올 수 없습니다
+          Could not load data
         </h3>
         <p className="text-sm text-gray-500 max-w-xs">
-          잠시 후 다시 시도해주세요
+          Please try again in a moment
         </p>
       </div>
       <Button
@@ -23,7 +23,7 @@ const EmptyCafeSection = () => {
         className="flex items-center space-x-2"
       >
         <RefreshCw className="w-4 h-4" />
-        <span>다시 시도</span>
+        <span>Retry</span>
       </Button>
     </div>
   );

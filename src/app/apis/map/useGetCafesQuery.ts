@@ -42,5 +42,6 @@ export function useGetCafesQuery(
     queryFn: () => getCafes(params),
     enabled: options?.enabled ?? true, // 쿼리를 조건부로 실행할 수 있도록 enabled 옵션 추가
     staleTime: 5 * 60 * 1000,
+    retry: 1,
   });
 }

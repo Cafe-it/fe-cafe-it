@@ -5,10 +5,8 @@ import MobileBar from "@/features/ui/MobileBar";
 import GoogleMapComponent, { Bounds } from "@/features/ui/GoogleMap";
 import { useGetCafesQuery } from "../apis/map/useGetCafesQuery";
 import CafeList from "./(components)/CafeList";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import Image from "next/image";
+
 import { throttle } from "lodash";
-import { motion } from "framer-motion";
 import LoadingDots from "./(components)/LoadingDot";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -42,39 +40,30 @@ export default function MapPage() {
     lat: number;
     lng: number;
   } | null>(null);
-  const [locationError, setLocationError] = useState<string | null>(null);
+
   const [searchParams, setSearchParams] = useState<{
     lat: number;
     lng: number;
     radius: number;
   } | null>(null);
+  const [isRadiusError, setIsRadiusError] = useState(false);
 
-  // 1. 현재 위치 가져오기
+  // 1. Get current location
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const initialLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setCurrentLocation(initialLocation);
-          // 초기 검색 파라미터 설정 (기본 반경 1km)
-          setSearchParams({ ...initialLocation, radius: 1 });
-        },
-        (error) => {
-          setLocationError(
-            "위치 정보 접근이 거부되었습니다. 브라우저 설정을 확인해주세요."
-          );
-          console.error("Error getting current location: ", error);
-        }
-      );
-    } else {
-      setLocationError("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+      navigator.geolocation.getCurrentPosition((position) => {
+        const initialLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCurrentLocation(initialLocation);
+        // Set initial search parameters (default radius 1km)
+        setSearchParams({ ...initialLocation, radius: 1 });
+      });
     }
   }, []);
 
-  // 2. 검색 파라미터를 기반으로 카페 데이터 API 호출
+  // 2. Call cafe data API based on search parameters
   const {
     data: cafesData,
     isLoading,
@@ -90,7 +79,7 @@ export default function MapPage() {
     }
   );
 
-  // 3. 지도 컴포넌트에 전달할 데이터 형태로 가공
+  // 3. Process data into a format to be passed to the map component
   const mapCafes = useMemo(() => {
     if (!cafesData?.data) return [];
     return cafesData.data.map((cafe) => ({
@@ -111,7 +100,7 @@ export default function MapPage() {
 
     const normalizedLat = normalizeCoord(centerLat);
     const normalizedLng = normalizeCoord(centerLng);
-    const normalizedRadius = normalizeRadius(Math.max(radius, 0.1)); // 최소 반경 100m
+    const normalizedRadius = normalizeRadius(Math.max(radius, 0.1)); // Minimum radius 100m
 
     setSearchParams({
       lat: normalizedLat,
@@ -120,18 +109,21 @@ export default function MapPage() {
     });
   }, []);
 
-  // Throttled 함수 생성
+  // Create throttled function
   const throttledBoundsChange = useMemo(
     () => throttle(handleBoundsChange, 1000),
     [handleBoundsChange]
   );
 
-  if (locationError) {
-    return <div>{locationError}</div>;
-  }
+  const handleResetRadius = () => {
+    if (currentLocation) {
+      setSearchParams({ ...currentLocation, radius: 1 });
+      setIsRadiusError(false);
+    }
+  };
 
   if (!currentLocation) {
-    return <div>현재 위치를 가져오는 중입니다...</div>;
+    return <div>Getting current location...</div>;
   }
 
   return (
@@ -149,15 +141,38 @@ export default function MapPage() {
           <LoadingDots />
         ) : isError ? (
           <div className="flex flex-col items-center justify-center h-full space-y-4 p-8">
+            <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-yellow-500" />
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="text-lg font-semibold text-gray-900">
+                The search radius is too large.
+              </h3>
+              <p className="text-sm text-gray-500 max-w-xs">
+                Please search with a smaller radius.
+              </p>
+            </div>
+            <Button
+              onClick={handleResetRadius}
+              variant="outline"
+              size="sm"
+              className="flex items-center space-x-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Reset Radius</span>
+            </Button>
+          </div>
+        ) : isError ? (
+          <div className="flex flex-col items-center justify-center h-full space-y-4 p-8">
             <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center">
               <AlertCircle className="w-8 h-8 text-red-500" />
             </div>
             <div className="text-center space-y-2">
               <h3 className="text-lg font-semibold text-gray-900">
-                데이터를 불러올 수 없습니다
+                Could not load data
               </h3>
               <p className="text-sm text-gray-500 max-w-xs">
-                잠시 후 다시 시도해주세요
+                Please try again in a moment
               </p>
             </div>
             <Button
@@ -167,7 +182,7 @@ export default function MapPage() {
               className="flex items-center space-x-2"
             >
               <RefreshCw className="w-4 h-4" />
-              <span>다시 시도</span>
+              <span>Retry</span>
             </Button>
           </div>
         ) : (

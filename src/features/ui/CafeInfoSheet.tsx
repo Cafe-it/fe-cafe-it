@@ -58,7 +58,7 @@ export function CafeInfoSheet({
         initial="hidden"
         animate="visible"
       >
-        {/* 카페 이름 */}
+        {/* Cafe name */}
         <motion.div variants={itemVariants}>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             {cafeInfo.name}
@@ -73,7 +73,7 @@ export function CafeInfoSheet({
           )}
         </motion.div>
 
-        {/* 자리 현황 */}
+        {/* Seat availability */}
         <motion.div
           className="bg-gray-50 rounded-xl p-4"
           variants={itemVariants}
@@ -81,7 +81,7 @@ export function CafeInfoSheet({
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center">
               <Users className="w-5 h-5 mr-2 text-gray-600" />
-              <span className="font-semibold text-gray-900">자리 현황</span>
+              <span className="font-semibold text-gray-900">Seat availability</span>
             </div>
             <motion.div
               className={cn(
@@ -94,64 +94,64 @@ export function CafeInfoSheet({
               animate={{ scale: 1 }}
               transition={{ delay: 0.4, duration: 0.3 }}
             >
-              {isAvailable ? "자리 있음" : "자리 없음"}
+              {isAvailable ? "Seats available" : "No seats"}
             </motion.div>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">총 자리</span>
-              <span className="font-semibold">{cafeInfo.totalSeats}석</span>
+              <span className="text-gray-600">Total seats</span>
+              <span className="font-semibold">{cafeInfo.totalSeats} seats</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">사용 가능</span>
+              <span className="text-gray-600">Available</span>
               <span
                 className={cn(
                   "font-semibold",
                   isAvailable ? "text-green-600" : "text-red-600"
                 )}
               >
-                {cafeInfo.availableSeats}석
+                {cafeInfo.availableSeats} seats
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600">사용 중</span>
+              <span className="text-gray-600">In use</span>
               <span className="font-semibold text-gray-900">
-                {cafeInfo.totalSeats - cafeInfo.availableSeats}석
+                {cafeInfo.totalSeats - cafeInfo.availableSeats} seats
               </span>
             </div>
           </div>
         </motion.div>
 
-        {/* 추가 정보 */}
+        {/* Additional information */}
         <motion.div
           className="bg-blue-50 rounded-xl p-4"
           variants={itemVariants}
         >
           <div className="flex items-center mb-2">
             <Clock className="w-5 h-5 mr-2 text-blue-600" />
-            <span className="font-semibold text-gray-900">운영 정보</span>
+            <span className="font-semibold text-gray-900">Operating information</span>
           </div>
           <p className="text-sm text-gray-600">
-            실시간으로 업데이트되는 자리 현황을 확인하세요.
+            Check the real-time seat availability.
           </p>
         </motion.div>
 
-        {/* 액션 버튼 */}
+        {/* Action buttons */}
         <motion.div className="space-y-3" variants={itemVariants}>
           <motion.button
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            길찾기
+            Get directions
           </motion.button>
           <motion.button
             className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            즐겨찾기 추가
+            Add to favorites
           </motion.button>
         </motion.div>
       </motion.div>

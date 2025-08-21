@@ -12,9 +12,9 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
 
   const getSeatStatusText = (availableSeats: number, totalSeats: number) => {
     const ratio = availableSeats / totalSeats;
-    if (ratio === 0) return "자리 없음";
-    if (ratio < 0.3) return "자리 있음";
-    return "자리 많음";
+    if (ratio === 0) return "No seats";
+    if (ratio < 0.3) return "Seats available";
+    return "Plenty of seats";
   };
 
   return (
@@ -23,7 +23,7 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
         {cafes.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm">주변에 카페가 없습니다</p>
+            <p className="text-sm">No cafes nearby</p>
           </div>
         ) : (
           cafes.map((cafe) => (
@@ -47,7 +47,7 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
                     </h3>
                     {/* {cafe.isManualMonitoring && (
                       <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 shrink-0">
-                        수동
+                        Manual
                       </span>
                     )} */}
                   </div>
@@ -56,13 +56,13 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
                     <div className="flex items-center gap-6">
                       <div className="flex items-center gap-1.5 text-sm text-gray-600">
                         <Users className="w-4 h-4 shrink-0" />
-                        <span>{cafe.totalSeats}석</span>
+                        <span>{cafe.totalSeats} seats</span>
                       </div>
                       <div className="flex items-center gap-1.5 text-sm text-gray-600">
                         <Clock className="w-4 h-4 shrink-0" />
                         <span className="text-xs">
                           {new Date(cafe.lastUpdated).toLocaleTimeString(
-                            "ko-KR",
+                            "en-US",
                             {
                               hour: "2-digit",
                               minute: "2-digit",
