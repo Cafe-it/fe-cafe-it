@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { OverlayView } from "@react-google-maps/api";
-import { CafeInfoSheet } from "./CafeInfoSheet";
 import Image from "next/image";
 
 interface CafeInfo {
@@ -16,18 +14,17 @@ interface CafeInfo {
 interface CafeMarkerProps {
   position: { lat: number; lng: number };
   cafeInfo: CafeInfo;
+  onMarkerClick: (cafeInfo: CafeInfo) => void;
 }
 
-const CafeMarker = ({ position, cafeInfo }: CafeMarkerProps) => {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-
+const CafeMarker = ({ position, cafeInfo, onMarkerClick }: CafeMarkerProps) => {
   const handleMarkerClick = () => {
-    setIsSheetOpen(true);
+    onMarkerClick(cafeInfo);
   };
 
   const getPixelPositionOffset = (width: number, height: number) => ({
     x: -(width / 2),
-    y: -height, // 아이콘의 하단 끝이 좌표에 맞도록 y 오프셋 조정
+    y: -height, // Adjust y-offset so that the bottom end of the icon matches the coordinates
   });
 
   return (
@@ -47,11 +44,6 @@ const CafeMarker = ({ position, cafeInfo }: CafeMarkerProps) => {
           />
         </div>
       </OverlayView>
-      <CafeInfoSheet
-        open={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
-        cafeInfo={cafeInfo}
-      />
     </>
   );
 };

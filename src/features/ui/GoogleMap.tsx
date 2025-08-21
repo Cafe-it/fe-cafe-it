@@ -30,12 +30,14 @@ interface GoogleMapProps {
     lng: number;
   };
   onBoundsChange: (bounds: Bounds) => void;
+  onMarkerClick: (cafe: Cafe) => void;
 }
 
 const GoogleMapComponent = ({
   cafes,
   initialCenter,
   onBoundsChange,
+  onMarkerClick,
 }: GoogleMapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -79,7 +81,7 @@ const GoogleMapComponent = ({
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center h-full">
-        지도 로딩 중...
+        Loading map...
       </div>
     );
   }
@@ -95,7 +97,12 @@ const GoogleMapComponent = ({
       onIdle={onIdle}
     >
       {cafes.map((cafe) => (
-        <CafeMarker key={cafe.id} position={cafe.position} cafeInfo={cafe} />
+        <CafeMarker
+          key={cafe.id}
+          position={cafe.position}
+          cafeInfo={cafe}
+          onMarkerClick={onMarkerClick}
+        />
       ))}
     </GoogleMap>
   );

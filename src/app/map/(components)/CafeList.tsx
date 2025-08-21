@@ -2,7 +2,13 @@ import { CafeResponse } from "@/app/apis/map/useGetCafesQuery";
 import React from "react";
 import { Users, Clock } from "lucide-react";
 
-const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
+const CafeList = ({
+  cafes,
+  onCafeClick,
+}: {
+  cafes: CafeResponse[];
+  onCafeClick: (cafe: CafeResponse) => void;
+}) => {
   const getSeatStatusColor = (availableSeats: number, totalSeats: number) => {
     const ratio = availableSeats / totalSeats;
     if (ratio === 0) return "bg-red-100 text-red-700 border-red-200";
@@ -30,6 +36,7 @@ const CafeList = ({ cafes }: { cafes: CafeResponse[] }) => {
             <div
               key={cafe.id}
               className="group relative bg-white border border-gray-200 rounded-xl p-5 hover:border-primary-100 transition-all duration-200 cursor-pointer"
+              onClick={() => onCafeClick(cafe)}
             >
               <span
                 className={`absolute top-4 right-4 inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium border ${getSeatStatusColor(

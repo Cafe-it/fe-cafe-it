@@ -2,13 +2,11 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import MobileBar from "@/features/ui/MobileBar";
-import GoogleMapComponent, { Bounds } from "@/features/ui/GoogleMap";
+import GoogleMapComponent, { Bounds, Cafe } from "@/features/ui/GoogleMap";
 import { useGetCafesQuery } from "../apis/map/useGetCafesQuery";
 import CafeList from "./(components)/CafeList";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import Image from "next/image";
+import { CafeInfoSheet } from "@/features/ui/CafeInfoSheet";
 import { throttle } from "lodash";
-import { motion } from "framer-motion";
 import LoadingDots from "./(components)/LoadingDot";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -49,6 +47,13 @@ export default function MapPage() {
     radius: number;
   } | null>(null);
   const [isRadiusError, setIsRadiusError] = useState(false);
+  const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const handleCafeSelect = (cafe: Cafe) => {
+    setSelectedCafe(cafe);
+    setIsSheetOpen(true);
+  };
 
   // 1. Get current location
   useEffect(() => {
@@ -161,6 +166,7 @@ export default function MapPage() {
           cafes={mapCafes}
           initialCenter={currentLocation}
           onBoundsChange={throttledBoundsChange}
+          onMarkerClick={handleCafeSelect}
         />
       </div>
 
@@ -214,9 +220,17 @@ export default function MapPage() {
             </Button>
           </div>
         ) : (
-          <CafeList cafes={mapCafes} />
+          <CafeList cafes={mapCafes} onCafeClick={handleCafeSelect} />
         )}
       </div>
+
+      {selectedCafe && (
+        <CafeInfoSheet
+          open={isSheetOpen}
+          onOpenChange={setIsSheetOpen}
+          cafeInfo={selectedCafe}
+        />
+      )}
 
       <MobileBar />
     </main>
