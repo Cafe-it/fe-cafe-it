@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Carousel, CarouselContent, CarouselItem } from "@/shared/ui/carousel";
 import { Button } from "@/shared/ui/button";
 import { Coffee, MapPin, Heart } from "lucide-react";
@@ -33,14 +33,35 @@ const onboardingSlides = [
 export default function OnboardingPage() {
   const router = useRouter();
   const [api, setApi] = useState<CarouselApi | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCurrentSlide(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrentSlide(api.selectedScrollSnap());
+    });
+  }, [api]);
+
 
   const handleStart = () => {
     router.push("/map");
   };
 
   const handleNext = () => {
-    api?.scrollNext();
+    if (currentSlide === onboardingSlides.length - 1) {
+      router.push("/map");
+    } else {
+      api?.scrollNext();
+    }
   };
+
+  const buttonText =
+    currentSlide === onboardingSlides.length - 1 ? "Start" : "Next";
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50">
@@ -101,7 +122,7 @@ export default function OnboardingPage() {
           onClick={handleNext}
           className="w-full h-14 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-lg rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
         >
-          Next
+          {buttonText}
         </Button>
       </div>
     </div>

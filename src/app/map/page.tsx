@@ -5,8 +5,10 @@ import MobileBar from "@/features/ui/MobileBar";
 import GoogleMapComponent, { Bounds } from "@/features/ui/GoogleMap";
 import { useGetCafesQuery } from "../apis/map/useGetCafesQuery";
 import CafeList from "./(components)/CafeList";
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import Image from "next/image";
 import { throttle } from "lodash";
+import { motion } from "framer-motion";
 import LoadingDots from "./(components)/LoadingDot";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -40,7 +42,7 @@ export default function MapPage() {
     lat: number;
     lng: number;
   } | null>(null);
-
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useState<{
     lat: number;
     lng: number;
@@ -51,15 +53,25 @@ export default function MapPage() {
   // 1. Get current location
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const initialLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        setCurrentLocation(initialLocation);
-        // Set initial search parameters (default radius 1km)
-        setSearchParams({ ...initialLocation, radius: 1 });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const initialLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setCurrentLocation(initialLocation);
+          // Set initial search parameters (default radius 1km)
+          setSearchParams({ ...initialLocation, radius: 1 });
+        },
+        (error) => {
+          setLocationError(
+            "Location access denied. Please check your browser settings."
+          );
+          console.error("Error getting current location: ", error);
+        }
+      );
+    } else {
+      setLocationError("This browser does not support location information.");
     }
   }, []);
 
@@ -68,6 +80,7 @@ export default function MapPage() {
     data: cafesData,
     isLoading,
     isError,
+    error,
   } = useGetCafesQuery(
     {
       lat: searchParams?.lat ?? 0,
@@ -78,6 +91,17 @@ export default function MapPage() {
       enabled: !!searchParams,
     }
   );
+
+  useEffect(() => {
+    if (isError && error) {
+      // A more specific error check would be better if the API provides a specific error code
+      if ((error as any).message?.includes("Radius is too large")) {
+        setIsRadiusError(true);
+      } else {
+        setIsRadiusError(false);
+      }
+    }
+  }, [isError, error]);
 
   // 3. Process data into a format to be passed to the map component
   const mapCafes = useMemo(() => {
@@ -122,6 +146,10 @@ export default function MapPage() {
     }
   };
 
+  if (locationError) {
+    return <div>{locationError}</div>;
+  }
+
   if (!currentLocation) {
     return <div>Getting current location...</div>;
   }
@@ -139,7 +167,7 @@ export default function MapPage() {
       <div className="min-h-[30vh] overflow-y-auto p-4">
         {isLoading ? (
           <LoadingDots />
-        ) : isError ? (
+        ) : isRadiusError ? (
           <div className="flex flex-col items-center justify-center h-full space-y-4 p-8">
             <div className="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center">
               <AlertCircle className="w-8 h-8 text-yellow-500" />
