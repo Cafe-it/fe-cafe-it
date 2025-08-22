@@ -3,18 +3,7 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { useMemo, useState, useCallback } from "react";
 import CafeMarker from "./CafeMarker";
-
-export interface Cafe {
-  id: string;
-  name: string;
-  position: {
-    lat: number;
-    lng: number;
-  };
-  availableSeats: number;
-  totalSeats: number;
-  isManualMonitoring?: boolean;
-}
+import { CafeResponse } from "@/app/apis/map/useGetCafesQuery";
 
 export interface Bounds {
   swLat: number;
@@ -24,13 +13,13 @@ export interface Bounds {
 }
 
 interface GoogleMapProps {
-  cafes: Cafe[];
+  cafes: CafeResponse[];
   initialCenter: {
     lat: number;
     lng: number;
   };
   onBoundsChange: (bounds: Bounds) => void;
-  onMarkerClick: (cafe: Cafe) => void;
+  onMarkerClick: (cafe: CafeResponse) => void;
 }
 
 const GoogleMapComponent = ({
@@ -99,7 +88,7 @@ const GoogleMapComponent = ({
       {cafes.map((cafe) => (
         <CafeMarker
           key={cafe.id}
-          position={cafe.position}
+          position={{ lat: cafe.lat, lng: cafe.lng }}
           cafeInfo={cafe}
           onMarkerClick={onMarkerClick}
         />

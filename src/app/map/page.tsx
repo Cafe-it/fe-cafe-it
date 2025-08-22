@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import MobileBar from "@/features/ui/MobileBar";
-import GoogleMapComponent, { Bounds, Cafe } from "@/features/ui/GoogleMap";
-import { useGetCafesQuery } from "../apis/map/useGetCafesQuery";
+import GoogleMapComponent, { Bounds } from "@/features/ui/GoogleMap";
+import { CafeResponse, useGetCafesQuery } from "../apis/map/useGetCafesQuery";
 import CafeList from "./(components)/CafeList";
 import { CafeInfoSheet } from "@/features/ui/CafeInfoSheet";
 import { throttle } from "lodash";
@@ -48,10 +48,10 @@ export default function MapPage() {
     radius: number;
   } | null>(null);
   const [isRadiusError, setIsRadiusError] = useState(false);
-  const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
+  const [selectedCafe, setSelectedCafe] = useState<CafeResponse | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const handleCafeSelect = (cafe: Cafe) => {
+  const handleCafeSelect = (cafe: CafeResponse) => {
     setSelectedCafe(cafe);
     setIsSheetOpen(true);
   };

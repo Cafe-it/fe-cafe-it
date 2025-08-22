@@ -67,7 +67,8 @@ const CafeList = ({
                       </div>
                       <div className="flex items-center gap-1.5 text-sm text-gray-600">
                         <Clock className="w-4 h-4 shrink-0" />
-                        <span className="text-xs">
+                        <span className="text-xs"> Last Updated:</span>
+                        <span className="text-xs font-semibold">
                           {new Date(cafe.lastUpdated).toLocaleTimeString(
                             "en-US",
                             {

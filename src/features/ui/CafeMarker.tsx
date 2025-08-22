@@ -1,20 +1,13 @@
 "use client";
 
+import { CafeResponse } from "@/app/apis/map/useGetCafesQuery";
 import { OverlayView } from "@react-google-maps/api";
 import Image from "next/image";
 
-interface CafeInfo {
-  id: string;
-  name: string;
-  availableSeats: number;
-  totalSeats: number;
-  distance?: string;
-}
-
 interface CafeMarkerProps {
   position: { lat: number; lng: number };
-  cafeInfo: CafeInfo;
-  onMarkerClick: (cafeInfo: CafeInfo) => void;
+  cafeInfo: CafeResponse;
+  onMarkerClick: (cafeInfo: CafeResponse) => void;
 }
 
 const CafeMarker = ({ position, cafeInfo, onMarkerClick }: CafeMarkerProps) => {

@@ -37,7 +37,7 @@ export default function SearchPage() {
             Coming soon! 🚀
           </p>
           <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
-            You'll be able to experience a great search function soon
+            You&apos;ll be able to experience a great search function soon
           </p>
         </div>
       </div>
